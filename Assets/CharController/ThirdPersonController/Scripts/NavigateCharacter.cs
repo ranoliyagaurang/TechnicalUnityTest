@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonController))]
-public class AICharacterControl : MonoBehaviour
+public class NavigateCharacter : MonoBehaviour
 {
     public UnityEngine.AI.NavMeshAgent Agent { get; private set; }             // the navmesh agent required for the path finding
     public ThirdPersonController Character { get; private set; } // the character we are controlling
