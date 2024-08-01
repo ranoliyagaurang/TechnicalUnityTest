@@ -1,6 +1,7 @@
 using StarterAssets;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -15,18 +16,8 @@ public class NavigateCharacter : MonoBehaviour
     public CustomActions input;
     float distance;
 
-    public List<Button> buttons;
-    public List<Vector3> locations;
 
-    private void Awake()
-    {
-        for (int i = 0; i < buttons.Count; i++)
-        {
-            int index = i;
-            buttons[index].onClick.RemoveAllListeners();
-            buttons[index].onClick.AddListener(() => GoToDestination(locations[index]));
-        }
-    }
+
     void OnEnable()
     {
         input = new CustomActions();
@@ -47,7 +38,7 @@ public class NavigateCharacter : MonoBehaviour
         Agent.updateRotation = false;
         Agent.updatePosition = true;
 
-        AssignInputs();
+        //AssignInputs();
     }
 
     void AssignInputs()
@@ -57,7 +48,11 @@ public class NavigateCharacter : MonoBehaviour
 
     public void ClickToMove()
     {
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, clickableLayers))
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+
+        }
+        else if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, clickableLayers))
         {
             // Disable Keyboard Inputs
             PlayerInput.enabled = false;
@@ -66,13 +61,7 @@ public class NavigateCharacter : MonoBehaviour
             Agent.SetDestination(hit.point);
         }
     }
-    public void GoToDestination(Vector3 destinationVector3)
-    {
-        // Disable Keyboard Inputs
-        PlayerInput.enabled = false;
-        Agent.enabled = true;
-        Agent.SetDestination(destinationVector3);
-    }
+
 
     private void Update()
     {
