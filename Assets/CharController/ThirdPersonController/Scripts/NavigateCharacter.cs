@@ -1,6 +1,8 @@
 using StarterAssets;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonController))]
@@ -13,6 +15,18 @@ public class NavigateCharacter : MonoBehaviour
     public CustomActions input;
     float distance;
 
+    public List<Button> buttons;
+    public List<Vector3> locations;
+
+    private void Awake()
+    {
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            int index = i;
+            buttons[index].onClick.RemoveAllListeners();
+            buttons[index].onClick.AddListener(() => GoToDestination(locations[index]));
+        }
+    }
     void OnEnable()
     {
         input = new CustomActions();
@@ -48,13 +62,21 @@ public class NavigateCharacter : MonoBehaviour
             // Disable Keyboard Inputs
             PlayerInput.enabled = false;
             Agent.enabled = true;
+            Debug.Log("hit point location == " + hit.point);
             Agent.SetDestination(hit.point);
         }
+    }
+    public void GoToDestination(Vector3 destinationVector3)
+    {
+        // Disable Keyboard Inputs
+        PlayerInput.enabled = false;
+        Agent.enabled = true;
+        Agent.SetDestination(destinationVector3);
     }
 
     private void Update()
     {
-        if(Agent.enabled)
+        if (Agent.enabled)
         {
             distance = Vector3.Distance(transform.position, Agent.destination);
 
